@@ -54,6 +54,7 @@ dependencies {
 
     // Dependencies for local unit tests
     testImplementation 'junit:junit:4.13.2'
+    testImplementation "org.hamcrest:hamcrest-all:1.3"
 
     // AndroidX Test - Instrumented testing
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
