@@ -7,14 +7,15 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import dev.marawanxmamdouh.todo.util.setupRefreshLayout
-import dev.marawanxmamdouh.todo.util.setupSnackbar
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import dev.marawanxmamdouh.todo.EventObserver
 import dev.marawanxmamdouh.todo.R
 import dev.marawanxmamdouh.todo.data.Task
+import dev.marawanxmamdouh.todo.data.source.DefaultTasksRepository
 import dev.marawanxmamdouh.todo.databinding.TasksFragBinding
+import dev.marawanxmamdouh.todo.util.setupRefreshLayout
+import dev.marawanxmamdouh.todo.util.setupSnackbar
 import timber.log.Timber
 
 /**
@@ -22,7 +23,9 @@ import timber.log.Timber
  */
 class TasksFragment : Fragment() {
 
-    private val viewModel by viewModels<TasksViewModel>()
+    private val viewModel by viewModels<TasksViewModel> {
+        TasksViewModelFactory(DefaultTasksRepository.getRepository(requireActivity().application))
+    }
 
     private val args: TasksFragmentArgs by navArgs()
 

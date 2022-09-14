@@ -1,6 +1,5 @@
 package dev.marawanxmamdouh.todo.tasks
 
-import android.app.Application
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.lifecycle.*
@@ -9,20 +8,16 @@ import dev.marawanxmamdouh.todo.R
 import dev.marawanxmamdouh.todo.data.Result
 import dev.marawanxmamdouh.todo.data.Result.Success
 import dev.marawanxmamdouh.todo.data.Task
-import dev.marawanxmamdouh.todo.data.source.DefaultTasksRepository
 import dev.marawanxmamdouh.todo.data.source.TasksDataSource
+import dev.marawanxmamdouh.todo.data.source.TasksRepository
 import kotlinx.coroutines.launch
 
 /**
  * ViewModel for the task list screen.
  */
-class TasksViewModel(application: Application) : AndroidViewModel(application) {
+class TasksViewModel(private val tasksRepository: TasksRepository) : ViewModel() {
 
-    // Note, for testing and architecture purposes, it's bad practice to construct the repository
-    // here. We'll show you how to fix this during the codelab
-    private val tasksRepository = DefaultTasksRepository.getRepository(application)
-
-    private val _forceUpdate = MutableLiveData<Boolean>(false)
+    private val _forceUpdate = MutableLiveData(false)
 
     private val _items: LiveData<List<Task>> = _forceUpdate.switchMap { forceUpdate ->
         if (forceUpdate) {
@@ -215,4 +210,12 @@ class TasksViewModel(application: Application) : AndroidViewModel(application) {
     fun refresh() {
         _forceUpdate.value = true
     }
+}
+
+@Suppress("UNCHECKED_CAST")
+class TasksViewModelFactory(
+    private val tasksRepository: TasksRepository
+) : ViewModelProvider.NewInstanceFactory() {
+    override fun <T : ViewModel> create(modelClass: Class<T>) =
+        (TasksViewModel(tasksRepository) as T)
 }
