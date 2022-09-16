@@ -6,13 +6,14 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.google.android.material.snackbar.Snackbar
 import dev.marawanxmamdouh.todo.EventObserver
+import dev.marawanxmamdouh.todo.R
+import dev.marawanxmamdouh.todo.data.source.DefaultTasksRepository
+import dev.marawanxmamdouh.todo.databinding.TaskdetailFragBinding
 import dev.marawanxmamdouh.todo.tasks.DELETE_RESULT_OK
 import dev.marawanxmamdouh.todo.util.setupRefreshLayout
 import dev.marawanxmamdouh.todo.util.setupSnackbar
-import com.google.android.material.snackbar.Snackbar
-import dev.marawanxmamdouh.todo.R
-import dev.marawanxmamdouh.todo.databinding.TaskdetailFragBinding
 
 /**
  * Main UI for the task detail screen.
@@ -22,7 +23,9 @@ class TaskDetailFragment : Fragment() {
 
     private val args: TaskDetailFragmentArgs by navArgs()
 
-    private val viewModel by viewModels<TaskDetailViewModel>()
+    private val viewModel by viewModels<TaskDetailViewModel> {
+        TaskDetailViewModelFactory(DefaultTasksRepository.getRepository(requireActivity().application))
+    }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)

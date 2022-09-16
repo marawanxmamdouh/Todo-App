@@ -1,6 +1,5 @@
 package dev.marawanxmamdouh.todo.taskdetail
 
-import android.app.Application
 import androidx.annotation.StringRes
 import androidx.lifecycle.*
 import dev.marawanxmamdouh.todo.Event
@@ -8,17 +7,13 @@ import dev.marawanxmamdouh.todo.R
 import dev.marawanxmamdouh.todo.data.Result
 import dev.marawanxmamdouh.todo.data.Result.Success
 import dev.marawanxmamdouh.todo.data.Task
-import dev.marawanxmamdouh.todo.data.source.DefaultTasksRepository
+import dev.marawanxmamdouh.todo.data.source.TasksRepository
 import kotlinx.coroutines.launch
 
 /**
  * ViewModel for the Details screen.
  */
-class TaskDetailViewModel(application: Application) : AndroidViewModel(application) {
-
-    // Note, for testing and architecture purposes, it's bad practice to construct the repository
-    // here. We'll show you how to fix this during the codelab
-    private val tasksRepository = DefaultTasksRepository.getRepository(application)
+class TaskDetailViewModel(private val tasksRepository: TasksRepository) : ViewModel() {
 
     private val _taskId = MutableLiveData<String>()
 
@@ -101,4 +96,12 @@ class TaskDetailViewModel(application: Application) : AndroidViewModel(applicati
     private fun showSnackbarMessage(@StringRes message: Int) {
         _snackbarText.value = Event(message)
     }
+}
+
+@Suppress("UNCHECKED_CAST")
+class TaskDetailViewModelFactory(
+    private val tasksRepository: TasksRepository
+) : ViewModelProvider.NewInstanceFactory() {
+    override fun <T : ViewModel> create(modelClass: Class<T>) =
+        (TaskDetailViewModel(tasksRepository) as T)
 }
