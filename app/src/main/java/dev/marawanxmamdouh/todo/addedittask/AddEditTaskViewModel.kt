@@ -1,12 +1,15 @@
 package dev.marawanxmamdouh.todo.addedittask
 
 import android.app.Application
-import androidx.lifecycle.*
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import dev.marawanxmamdouh.todo.Event
+import dev.marawanxmamdouh.todo.R
+import dev.marawanxmamdouh.todo.TodoApplication
 import dev.marawanxmamdouh.todo.data.Result.Success
 import dev.marawanxmamdouh.todo.data.Task
-import dev.marawanxmamdouh.todo.data.source.DefaultTasksRepository
-import dev.marawanxmamdouh.todo.R
 import kotlinx.coroutines.launch
 
 /**
@@ -16,7 +19,7 @@ class AddEditTaskViewModel(application: Application) : AndroidViewModel(applicat
 
     // Note, for testing and architecture purposes, it's bad practice to construct the repository
     // here. We'll show you how to fix this during the codelab
-    private val tasksRepository = DefaultTasksRepository.getRepository(application)
+    private val tasksRepository = (application as TodoApplication).taskRepository
 
     // Two-way data binding, exposing MutableLiveData
     val title = MutableLiveData<String>()

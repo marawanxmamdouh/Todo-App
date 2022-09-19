@@ -1,14 +1,9 @@
 package dev.marawanxmamdouh.todo.data.source
 
-import android.app.Application
 import androidx.lifecycle.LiveData
-import androidx.room.Room
-import com.example.android.architecture.blueprints.todoapp.data.source.remote.TasksRemoteDataSource
 import dev.marawanxmamdouh.todo.data.Result
 import dev.marawanxmamdouh.todo.data.Result.Success
 import dev.marawanxmamdouh.todo.data.Task
-import dev.marawanxmamdouh.todo.data.source.local.TasksLocalDataSource
-import dev.marawanxmamdouh.todo.data.source.local.ToDoDatabase
 import kotlinx.coroutines.*
 
 /**
@@ -17,23 +12,8 @@ import kotlinx.coroutines.*
 class DefaultTasksRepository constructor(
     private val tasksRemoteDataSource: TasksDataSource,
     private val tasksLocalDataSource: TasksDataSource,
-    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO) : TasksRepository {
-
-    companion object {
-        @Volatile
-        private var INSTANCE: DefaultTasksRepository? = null
-
-        fun getRepository(app: Application): DefaultTasksRepository {
-            return INSTANCE ?: synchronized(this) {
-                val database = Room.databaseBuilder(app,
-                    ToDoDatabase::class.java, "Tasks.db")
-                    .build()
-                DefaultTasksRepository(TasksRemoteDataSource, TasksLocalDataSource(database.taskDao())).also {
-                    INSTANCE = it
-                }
-            }
-        }
-    }
+    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
+) : TasksRepository {
 
     override suspend fun getTasks(forceUpdate: Boolean): Result<List<Task>> {
         if (forceUpdate) {
