@@ -23,6 +23,7 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mockito.mock
+import org.mockito.Mockito.verify
 
 @RunWith(AndroidJUnit4::class)
 @MediumTest
@@ -62,5 +63,26 @@ class TasksFragmentTest {
                     hasDescendant(withText("TITLE1")), click()
                 )
             )
+    }
+
+    @Test
+    fun clickAddTaskButton_navigateToAddEditFragment() {
+        // GIVEN - On the home screen
+        val scenario = launchFragmentInContainer<TasksFragment>(Bundle(), R.style.AppTheme)
+        val navController = mock(NavController::class.java)
+
+        scenario.onFragment {
+            Navigation.setViewNavController(it.view!!, navController)
+        }
+
+        // WHEN - Click on the "+" button
+        onView(withId(R.id.add_task_fab)).perform(click())
+
+        // THEN - Verify that we navigate to the add screen
+        verify(navController).navigate(
+            TasksFragmentDirections.actionTasksFragmentToAddEditTaskFragment(
+                null, "New Task"
+            )
+        )
     }
 }
