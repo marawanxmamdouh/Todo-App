@@ -2,6 +2,7 @@ package dev.marawanxmamdouh.todo.tasks
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import dev.marawanxmamdouh.todo.Event
+import dev.marawanxmamdouh.todo.MainCoroutineRule
 import dev.marawanxmamdouh.todo.R
 import dev.marawanxmamdouh.todo.data.Task
 import dev.marawanxmamdouh.todo.data.source.FakeTestRepository
@@ -31,6 +32,9 @@ class TasksViewModelTest {
     @get:Rule
     var instantExecutorRule = InstantTaskExecutorRule()
 
+    @get:Rule
+    var mainCoroutineRule = MainCoroutineRule()
+
     private lateinit var tasksViewModel: TasksViewModel
 
     @Before
@@ -43,19 +47,6 @@ class TasksViewModelTest {
         tasksRepository.addTasks(task1, task2, task3)
 
         tasksViewModel = TasksViewModel(tasksRepository)
-    }
-
-    val testDispatcher = TestCoroutineDispatcher()
-
-    @Before
-    fun setupDispatcher() {
-        Dispatchers.setMain(testDispatcher)
-    }
-
-    @After
-    fun tearDownDispatcher() {
-        Dispatchers.resetMain()
-        testDispatcher.cleanupTestCoroutines()
     }
 
     @Test
